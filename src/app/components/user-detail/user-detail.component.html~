@@ -1,0 +1,64 @@
+<div class="flex justify-center py-8">
+  <div class="max-w-3xl w-full">
+    <!-- Back Button -->
+    <button
+      mat-button
+      color="primary"
+      class="mb-4 flex items-center"
+      (click)="goBack()"
+    >
+      <mat-icon class="mr-1">arrow_back</mat-icon>
+      Back to Users
+    </button>
+
+    <!-- Loading Spinner -->
+    @if (!userService.currentUser()) {
+      <div class="flex justify-center my-12">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+    }
+
+    <!-- User Details Card -->
+    @if (userService.currentUser()) {
+      <mat-card class="shadow-lg">
+        <div class="flex flex-col md:flex-row">
+          <!-- User Avatar Section -->
+          <div class="bg-gray-100 p-8 flex justify-center items-start md:w-1/3">
+            <img
+              [src]="userService.currentUser()!.avatar"
+              [alt]="userService.currentUser()!.first_name"
+              class="rounded-full w-40 h-40 object-cover shadow-md"
+            >
+          </div>
+
+          <!-- User Info Section -->
+          <div class="p-8 md:w-2/3">
+            <h1 class="text-3xl font-bold mb-2">
+              {{ userService.currentUser()!.first_name }} {{ userService.currentUser()!.last_name }}
+            </h1>
+
+            <div class="text-gray-600 mb-6">
+              User ID: {{ userService.currentUser()!.id }}
+            </div>
+
+            <mat-divider class="mb-6"></mat-divider>
+
+            <div class="grid grid-cols-1 gap-4">
+              <div>
+                <div class="text-sm text-gray-500 mb-1">Email</div>
+                <div class="font-medium">{{ userService.currentUser()!.email }}</div>
+              </div>
+
+            </div>
+
+            <div class="mt-8">
+              <button mat-raised-button color="primary" (click)="goBack()">
+                Return to User List
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    }
+  </div>
+</div>

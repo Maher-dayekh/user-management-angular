@@ -1,0 +1,77 @@
+<div class="min-h-screen w-full bg-gradient-to-br from-white via-[#f5f7ff] to-white">
+  <section class="max-w-7xl mx-auto px-4 py-10 flex flex-col items-center">
+
+    <h1 class="text-3xl font-extrabold text-gray-800">User Directory</h1>
+    <p class="text-gray-500 mt-1 mb-8">
+      Manage and view all users in your organization
+    </p>
+
+    <!-- Loading spinner -->
+    @if (!users().length) {
+      <div class="my-16">
+        <mat-spinner diameter="60"></mat-spinner>
+      </div>
+    }
+
+    <!-- Card grid -->
+    <div
+      class="grid gap-y-6 gap-x-8
+             grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      @for (user of users(); track user.id) {
+        <mat-card
+          class="flex flex-col items-center text-center
+                 rounded-xl shadow-xl bg-white p-8
+                 hover:shadow-2xl transition-all duration-300"
+          (click)="viewUserDetails(user.id)"
+        >
+          <div
+            class="p-1 rounded-full bg-gradient-to-br
+                   from-indigo-500 to-purple-500 mb-4">
+            <img [src]="user.avatar"
+                 [alt]="user.first_name"
+                 class="w-20 h-20 rounded-full object-cover bg-gray-200" />
+          </div>
+
+          <h2 class="text-lg font-semibold text-indigo-700 mb-1">
+            {{ user.first_name }} {{ user.last_name }}
+          </h2>
+
+          <p class="text-gray-500 text-sm flex items-center justify-center gap-1">
+            <span class="font-medium">#</span>ID: {{ user.id }}
+          </p>
+
+          <p class="text-gray-500 text-sm flex items-center justify-center gap-1 mt-1">
+            <mat-icon inline fontSet="material-icons-round"
+                      class="text-base text-gray-400">mail</mat-icon>
+            {{ user.email }}
+          </p>
+
+          <button
+            mat-flat-button
+            color="primary"
+            class="w-full mt-6 text-white font-medium
+                   bg-gradient-to-r from-indigo-500 to-purple-600
+                   rounded-md py-2
+                   flex items-center justify-center gap-2
+                   hover:opacity-90 transition-opacity"
+          >
+            <mat-icon inline fontSet="material-icons-round" class="text-base">visibility</mat-icon>
+            View Details
+          </button>
+        </mat-card>
+      }
+    </div>
+
+    @if (users().length) {
+      <mat-paginator
+        class="mt-12"
+        [length]="totalUsers()"
+        [pageSize]="pageSize()"
+        [pageIndex]="currentPage() - 1"
+        [hidePageSize]="true"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    }
+  </section>
+</div>

@@ -1,0 +1,72 @@
+<mat-toolbar
+  class="!bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600
+         h-16 px-6 shadow-lg text-white"
+  color="transparent"
+>
+  <div class="flex w-full max-w-7xl mx-auto items-center justify-between">
+    <div class="flex items-center gap-3 cursor-pointer" (click)="navigateToHome()">
+      <div class="bg-white/20 backdrop-blur-sm rounded-lg p-1 flex items-center justify-center">
+        <img src="assets/group.svg" alt="Group Icon" class="h-6 w-6" />
+      </div>
+
+      <span class="font-semibold text-white text-lg tracking-wide">User Management</span>
+    </div>
+
+    <div class="relative">
+      <div class="relative w-64">
+
+        <div class="flex items-center bg-white rounded-lg shadow px-2 py-1">
+         <span class="text-gray-500 mr-2">
+            <img src="assets/search-icon.svg" alt="Search Icon" class="h-6 w-6" />
+         </span>
+
+
+          <input
+            id="searchId"
+            type="text"
+            [(ngModel)]="searchId"
+            (ngModelChange)="searchUser()"
+            placeholder="Enter user ID"
+            class="w-full outline-none text-sm text-black bg-transparent"
+          >
+
+          <button
+            *ngIf="searchId"
+            (click)="resetSearch()"
+            class="ml-2 text-gray-400 hover:text-gray-700 transition-colors"
+            aria-label="Clear"
+          >
+            <img src="assets/clear-icon.svg" alt="Clear Icon" class="h-6 w-6" />
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Search Results Dropdown -->
+      @if (showResult()) {
+        <div class="absolute top-full left-0 right-0 bg-white shadow-lg rounded-md z-10 mt-1 overflow-hidden">
+          @if (searchResult()) {
+            <div
+              class="p-4 flex items-center hover:bg-gray-100 cursor-pointer transition-colors"
+              (click)="navigateToUser(searchResult()!.id)"
+            >
+              <img
+                [src]="searchResult()!.avatar"
+                [alt]="searchResult()!.first_name"
+                class="w-10 h-10 rounded-full mr-3"
+              >
+              <div>
+                <p class="font-medium text-gray-600">{{ searchResult()!.first_name }} {{ searchResult()!.last_name }}</p>
+                <p class="text-sm text-gray-600">ID: {{ searchResult()!.id }}</p>
+              </div>
+            </div>
+          } @else {
+            <div class="p-4 text-center text-gray-600">
+              No user found with this ID
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</mat-toolbar>
