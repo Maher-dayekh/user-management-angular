@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of, switchMap, tap} from 'rxjs';
 import { User, UserListResponse, UserResponse } from '../models/user.model';
 import { LoadingService } from './loading.service';
@@ -26,8 +26,13 @@ export class UserService {
       return of(this.pageCache.get(page) as UserListResponse);
     }
 
+    const headers = new HttpHeaders({
+      'x-api-key': 'reqres-free-v1'
+    });
+
     this.loadingService.setLoading(true);
-    return this.http.get<UserListResponse>(`${this.apiUrl}?page=${page}`).pipe(
+
+    return this.http.get<UserListResponse>(`${this.apiUrl}?page=${page}`, { headers }).pipe(
       tap(response => {
         // Cache the page data
         this.pageCache.set(page, response);
@@ -50,36 +55,20 @@ export class UserService {
       return of({ data: user });
     }
 
-    // 2. If not cached, scan all pages until user is found
+    // 2. If not cached, fetch from API directly
     this.loadingService.setLoading(true);
 
-    // Simulate page scanning from 1 to max known pages (assume 2 pages for reqres.in)
-    const maxPagesToScan = 2;
-    let currentPage = 1;
+    const headers = new HttpHeaders({
+      'x-api-key': 'reqres-free-v1'
+    });
 
-    const tryNextPage = (): Observable<UserResponse> => {
-      return this.getUsers(currentPage).pipe(
-        tap(() => currentPage++),
-        // Use switchMap to try again if not found after caching
-        switchMap(() => {
-          if (this.userCache.has(id)) {
-            const user = this.userCache.get(id) as User;
-            this.currentUser.set(user);
-            this.loadingService.setLoading(false);
-            return of({ data: user });
-          }
-
-          if (currentPage <= maxPagesToScan) {
-            return tryNextPage(); // Try next page
-          } else {
-            this.loadingService.setLoading(false);
-            throw new Error(`User with ID ${id} not found.`);
-          }
-        })
-      );
-    };
-
-    return tryNextPage();
+    return this.http.get<UserResponse>(`${this.apiUrl}/${id}`, { headers }).pipe(
+      tap(response => {
+        this.userCache.set(response.data.id, response.data);
+        this.currentUser.set(response.data);
+        this.loadingService.setLoading(false);
+      })
+    );
   }
 
 

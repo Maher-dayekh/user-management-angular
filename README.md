@@ -1,27 +1,45 @@
-# UserManagementAngular
+# 🧑‍💼 Angular User Management App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
+This project is a simple **User Management** web application built with:
 
-## Development server
+- **Angular** version `17.3.17`
+- **Node.js** version `22.6.0`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+It retrieves users from the public [Reqres API](https://reqres.in) and supports:
+- Fetching a list of users with pagination
+- Fetching a user by ID
+- Caching to avoid redundant API calls
 
-## Code scaffolding
+## 🔐 API Authentication Header
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+All HTTP requests to the Reqres API use the following custom header:
 
-## Build
+x-api-key: reqres-free-v1
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+This header is **required** to successfully access the following endpoints:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- `GET https://reqres.in/api/users?page={page}` – Fetch paginated user list
+- `GET https://reqres.in/api/users/{id}` – Fetch user details by ID
 
-## Running end-to-end tests
+The header is set via Angular's `HttpClient` using `HttpHeaders`.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+---
 
-## Further help
+## 📦 Requirements
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Node.js `22.6.0` or higher
+- Angular CLI `17.3.17`
+- Internet access (API is hosted remotely)
+
+---
+
+## 🚀 Running the Project
+
+1. Install dependencies:
+
+```bash
+npm install
+ng serve
+The app will be available at http://localhost:4200.
+
